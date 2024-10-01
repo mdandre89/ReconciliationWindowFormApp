@@ -3,84 +3,37 @@ using System.Globalization;
 using System.Text.Json;
 using System.Xml.Linq;
 using System.Text;
-class PurchaseTransaction
-{
-    required public string Customer { get; set; }
-    public DateTime PurchaseDate { get; set; }
-    public List<string> Items { get; set; } = new List<string>();
-}
-class PaymentTransaction
-{
-    required public string Customer { get; set; }
-    public int Year { get; set; }
-    public int Month { get; set; }
-    public decimal Amount { get; set; } // or decimal?
-}
-public class PaymentUnmatched
-{
-    required public string Customer { get; set; }
-    public int Year { get; set; }
-    public int Month { get; set; }
-    public decimal Amount { get; set; }
-    public decimal PaidAmount { get; set; }
-    public decimal Difference { get; set; }
-}
 
 namespace testform
 {
+    class PurchaseTransaction
+    {
+        required public string Customer { get; set; }
+        public DateTime PurchaseDate { get; set; }
+        public List<string> Items { get; set; } = new List<string>();
+    }
+    class PaymentTransaction
+    {
+        required public string Customer { get; set; }
+        public int Year { get; set; }
+        public int Month { get; set; }
+        public decimal Amount { get; set; } // or decimal?
+    }
+    public class PaymentUnmatched
+    {
+        required public string Customer { get; set; }
+        public int Year { get; set; }
+        public int Month { get; set; }
+        public decimal Amount { get; set; }
+        public decimal PaidAmount { get; set; }
+        public decimal Difference { get; set; }
+    }
     public partial class Form1 : Form
     {
         public Form1()
         {
             InitializeComponent();
         }
-
-        // Event handler for the "Open Files" button
-        private void btnOpenFiles_Click(object sender, EventArgs e)
-        {
-            // Open file dialogs for each TextBox
-            OpenFileDialog openFileDialog = new OpenFileDialog();
-
-            // Configure the OpenFileDialog
-            openFileDialog.Filter = "Text Files (*.txt)|*.txt|All Files (*.*)|*.*";
-
-            // File 1
-            if (openFileDialog.ShowDialog() == DialogResult.OK)
-            {
-                textBox1.Text = openFileDialog.FileName;
-            }
-
-            // File 2
-            if (openFileDialog.ShowDialog() == DialogResult.OK)
-            {
-                textBox2.Text = openFileDialog.FileName;
-            }
-
-            // File 3
-            if (openFileDialog.ShowDialog() == DialogResult.OK)
-            {
-                textBox3.Text = openFileDialog.FileName;
-            }
-        }
-
-        // Event handler for when the TextBox is clicked
-        private void textBox1_Click(object sender, EventArgs e)
-        {
-            // Create and configure OpenFileDialog
-            OpenFileDialog openFileDialog = new OpenFileDialog
-            {
-                Filter = "All Files (*.*)|*.json",  // Filter can be adjusted to restrict file types
-                Title = "Select a the JSON file"
-            };
-
-            // Show the dialog and check if a file was selected
-            if (openFileDialog.ShowDialog() == DialogResult.OK)
-            {
-                // Set the selected file path to the TextBox
-                textBox1.Text = openFileDialog.FileName;
-            }
-        }
-
         private void BtnPickFile1_Click(object sender, EventArgs e)
         {
             // Open file dialog for file 1
@@ -94,7 +47,6 @@ namespace testform
                 textBox1.Text = openFileDialog.FileName;
             }
         }
-
         private void BtnPickFile2_Click(object sender, EventArgs e)
         {
             // Open file dialog for file 2
@@ -108,7 +60,6 @@ namespace testform
                 textBox2.Text = openFileDialog.FileName;
             }
         }
-
         private void BtnPickFile3_Click(object sender, EventArgs e)
         {
             // Open file dialog for file 3
@@ -123,18 +74,6 @@ namespace testform
             }
 
         }
-
-        private void btnLogFiles_Click(object sender, EventArgs e)
-        {
-            // Log the selected file paths to the console
-            Console.WriteLine("File 1: " + textBox1.Text);
-            Console.WriteLine("File 2: " + textBox2.Text);
-            Console.WriteLine("File 3: " + textBox3.Text);
-
-            // Show a message to the user
-            MessageBox.Show("Files have been logged to the console!");
-        }
-
         private void BtnExecute_Click(object sender, EventArgs e)
         {
             // Process and store the content of each file
@@ -147,6 +86,7 @@ namespace testform
             string fileName = "PaymentsNotMatched";
 
             SaveFile(paymentsNotMatched, fileName, "json");
+            MessageBox.Show("Files have been logged to the console!");
         }
 
         static List<PurchaseTransaction> ParsePurchases(string purchasesFile)
