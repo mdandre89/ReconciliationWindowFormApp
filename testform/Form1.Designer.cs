@@ -13,6 +13,7 @@
         private Button btnPickFile2;
         private Button btnPickFile3;
         private Button btnExecute;
+        private ComboBox formatComboBox;
         /// <summary>
         ///  Clean up any resources being used.
         /// </summary>
@@ -41,6 +42,7 @@
             btnPickFile2 = new Button();
             btnPickFile3 = new Button();
             btnExecute = new Button();
+            formatComboBox = new ComboBox();
             SuspendLayout();
             // 
             // textBox1
@@ -68,7 +70,7 @@
             // 
             btnPickFile1.Location = new Point(318, 12);
             btnPickFile1.Name = "btnPickFile1";
-            btnPickFile1.Size = new Size(75, 35);
+            btnPickFile1.Size = new Size(75, 25);
             btnPickFile1.TabIndex = 3;
             btnPickFile1.Text = "Pick File 1";
             btnPickFile1.UseVisualStyleBackColor = true;
@@ -78,7 +80,7 @@
             // 
             btnPickFile2.Location = new Point(318, 60);
             btnPickFile2.Name = "btnPickFile2";
-            btnPickFile2.Size = new Size(75, 35);
+            btnPickFile2.Size = new Size(75, 25);
             btnPickFile2.TabIndex = 4;
             btnPickFile2.Text = "Pick File 2";
             btnPickFile2.UseVisualStyleBackColor = true;
@@ -88,20 +90,30 @@
             // 
             btnPickFile3.Location = new Point(318, 108);
             btnPickFile3.Name = "btnPickFile3";
-            btnPickFile3.Size = new Size(75, 35);
+            btnPickFile3.Size = new Size(75, 25);
             btnPickFile3.TabIndex = 5;
             btnPickFile3.Text = "Pick File 3";
             btnPickFile3.UseVisualStyleBackColor = true;
             btnPickFile3.Click += BtnPickFile3_Click;
+            //// 
+            //// formatComboBox
+            //// 
+            formatComboBox.Location = new Point(12, 158);
+            formatComboBox.Name = "formatComboBox";
+            formatComboBox.Size = new Size(300, 35);
+            formatComboBox.TabIndex = 6;
+            formatComboBox.Items.AddRange(new object[] { "json", "csv", "text" });
+            formatComboBox.SelectedIndex = 0;
             //
             // btnExecute
             //
-            btnExecute.Location = new Point(12, 158); // Placed below the last text box
+            btnExecute.Location = new Point(318, 158);
             btnExecute.Name = "btnExecute";
-            btnExecute.Size = new Size(100, 35); // Updated size for better visibility
-            btnExecute.TabIndex = 6;
+            btnExecute.Size = new Size(75, 25); 
+            btnExecute.TabIndex = 7;
             btnExecute.Text = "Execute";
             btnExecute.UseVisualStyleBackColor = true;
+            btnExecute.BackColor = Color.Red;
             btnExecute.Click += new System.EventHandler(this.BtnExecute_Click);
             // 
             // Form1
@@ -114,6 +126,7 @@
             Controls.Add(textBox2);
             Controls.Add(textBox1);
             Controls.Add(btnExecute);
+            Controls.Add(formatComboBox);
             Name = "Form1";
             Text = "File Reader";
             ResumeLayout(false);

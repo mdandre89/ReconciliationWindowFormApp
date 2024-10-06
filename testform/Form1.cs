@@ -76,17 +76,39 @@ namespace testform
         }
         private void BtnExecute_Click(object sender, EventArgs e)
         {
-            // Process and store the content of each file
-            var purchases = ParsePurchases(textBox1.Text);
-            var payments = ParsePayments(textBox2.Text);
-            var prices = ParsePrices(textBox3.Text);
+            if (textBox1.Text.Length>0 && textBox2.Text.Length > 0 && textBox3.Text.Length > 0)
+            {
+                var purchases = ParsePurchases(textBox1.Text);
+                var payments = ParsePayments(textBox2.Text);
+                var prices = ParsePrices(textBox3.Text);
 
-            var paymentsNotMatched = ReconcilePurchasesAndPayments(purchases, payments, prices);
+                var paymentsNotMatched = ReconcilePurchasesAndPayments(purchases, payments, prices);
 
-            string fileName = "PaymentsNotMatched";
+                string fileName = "PaymentsNotMatched";
+                string selectedFormat = this.formatComboBox.Text;
 
-            SaveFile(paymentsNotMatched, fileName, "json");
-            MessageBox.Show("Files have been logged to the console!");
+                SaveFile(paymentsNotMatched, fileName, selectedFormat);
+                MessageBox.Show("Files have been logged to the console!");
+
+                string fullPath = $"{fileName}.{selectedFormat}";
+
+                if (File.Exists(fullPath))
+                {
+                    System.Diagnostics.Process proc = new System.Diagnostics.Process();
+                    proc.StartInfo.FileName = fullPath; // Use the full path of the file
+                    proc.StartInfo.UseShellExecute = true; // Open with the default associated app
+                    proc.Start();
+                }
+                else
+                {
+                    MessageBox.Show("Failed to save the file.");
+                }
+            }
+            else
+            {
+                MessageBox.Show("Select 3 files first!");
+            }
+
         }
 
         static List<PurchaseTransaction> ParsePurchases(string purchasesFile)
@@ -134,7 +156,7 @@ namespace testform
 
         static void SaveFile(List<PaymentUnmatched> paymentsNotMatched, string fileName, string format)
         {
-            string fileNameWithFormat = $"{fileName}.{format}";
+            string fileNameWithFormat  = $"{fileName}.{format}";
 
             switch (format.ToLower())
             {
