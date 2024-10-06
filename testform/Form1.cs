@@ -3,6 +3,17 @@ using System.Globalization;
 using System.Text.Json;
 using System.Xml.Linq;
 using System.Text;
+using RazorLight;
+
+public class PaymentUnmatched
+{
+    required public string Customer { get; set; }
+    public int Year { get; set; }
+    public int Month { get; set; }
+    public decimal Amount { get; set; }
+    public decimal PaidAmount { get; set; }
+    public decimal Difference { get; set; }
+}
 
 namespace testform
 {
@@ -18,15 +29,6 @@ namespace testform
         public int Year { get; set; }
         public int Month { get; set; }
         public decimal Amount { get; set; } // or decimal?
-    }
-    public class PaymentUnmatched
-    {
-        required public string Customer { get; set; }
-        public int Year { get; set; }
-        public int Month { get; set; }
-        public decimal Amount { get; set; }
-        public decimal PaidAmount { get; set; }
-        public decimal Difference { get; set; }
     }
     public partial class Form1 : Form
     {
@@ -74,7 +76,7 @@ namespace testform
             }
 
         }
-        private void BtnExecute_Click(object sender, EventArgs e)
+        private async void BtnExecute_Click(object sender, EventArgs e)
         {
             if (textBox1.Text.Length>0 && textBox2.Text.Length > 0 && textBox3.Text.Length > 0)
             {
@@ -86,24 +88,24 @@ namespace testform
 
                 string fileName = "PaymentsNotMatched";
                 string selectedFormat = this.formatComboBox.Text;
-
                 SaveFile(paymentsNotMatched, fileName, selectedFormat);
-                MessageBox.Show("Files have been logged to the console!");
 
-                string fullPath = $"{fileName}.{selectedFormat}";
+                string fullPath = Directory.GetParent(AppDomain.CurrentDomain.BaseDirectory).Parent.Parent.Parent.FullName;
+                string savePath = Path.Combine(fullPath, $"{fileName}Report.html");
+                await CreateHtml(fullPath, paymentsNotMatched, fileName);
 
-                if (File.Exists(fullPath))
+                if (File.Exists(savePath))
                 {
                     System.Diagnostics.Process proc = new System.Diagnostics.Process();
-                    proc.StartInfo.FileName = fullPath; // Use the full path of the file
-                    proc.StartInfo.UseShellExecute = true; // Open with the default associated app
+                    proc.StartInfo.FileName = savePath;
+                    proc.StartInfo.UseShellExecute = true;
                     proc.Start();
                 }
                 else
                 {
                     MessageBox.Show("Failed to save the file.");
                 }
-            }
+        }
             else
             {
                 MessageBox.Show("Select 3 files first!");
@@ -251,6 +253,22 @@ namespace testform
             }
 
             return paymentsUnmatched.OrderByDescending(r => Math.Abs(r.Difference)).ToList();
+        }
+
+        public static async Task CreateHtml(string basePath, List<PaymentUnmatched> paymentsNotMatched, string fileName)
+        {
+            var engine = new RazorLightEngineBuilder()
+            .UseEmbeddedResourcesProject(typeof(Program))
+            .SetOperatingAssembly(typeof(Program).Assembly)
+            .UseMemoryCachingProvider()
+            .Build();
+
+            string template = File.ReadAllText(Path.Combine(basePath, "Template", $"{fileName}.cshtml"));
+            string result = await engine.CompileRenderStringAsync("templateKey", template, paymentsNotMatched);
+            string savePath = Path.Combine(basePath, $"{fileName}Report.html");
+
+            File.WriteAllText(savePath, result);
+            Console.WriteLine("HTML report generated successfully!");
         }
     }
 }

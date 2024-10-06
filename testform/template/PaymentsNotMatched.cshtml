@@ -1,0 +1,28 @@
+@using System.Collections.Generic
+@model List<PaymentUnmatched>
+
+<table>
+    <thead>
+        <tr>
+            <th>Customer</th>
+            <th>Year</th>
+            <th>Month</th>
+            <th>Amount</th>
+            <th>Paid Amount</th>
+            <th>Difference</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var payment in Model)
+        {
+            <tr>
+                <td>@payment.Customer</td>
+                <td>@payment.Year</td>
+                <td>@payment.Month</td>
+                <td>@payment.Amount</td>
+                <td>@payment.PaidAmount</td>
+                <td>@payment.Difference</td>
+            </tr>
+        }
+    </tbody>
+</table>
